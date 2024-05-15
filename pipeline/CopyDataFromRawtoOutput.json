@@ -62,6 +62,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Data Movement Activities/Copy Data Activity"
+		},
 		"annotations": [],
 		"lastPublishTime": "2024-05-14T06:12:08Z"
 	},
