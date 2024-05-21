@@ -1,0 +1,123 @@
+{
+	"name": "Assignment - 2",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach Inactive User",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Array",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('InactiveUsers')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Trigger Stored procedure  to delete the inactive user",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[SP_Delete_Inactive_User]",
+								"storedProcedureParameters": {
+									"userid": {
+										"value": {
+											"value": "@item().id",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "LS_ASQL_ey_sql_db",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set Variable Array",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Inactive Users from Text File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "InactiveUsers",
+					"value": {
+						"value": "@activity('Lookup Inactive Users from Text File').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Lookup Inactive Users from Text File",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_ADLS_Assigment2_Text",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"variables": {
+			"InactiveUsers": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Assignment"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-16T08:26:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

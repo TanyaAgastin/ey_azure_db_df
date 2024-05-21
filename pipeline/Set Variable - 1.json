@@ -1,0 +1,96 @@
+{
+	"name": "Set Variable - 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set Length",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Length",
+					"value": {
+						"value": "@pipeline().parameters.Length",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Breadth",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Breadth",
+					"value": {
+						"value": "@pipeline().parameters.Breadth",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Area",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Length",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set Breadth",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Area",
+					"value": {
+						"value": "@{mul(int(variables('Breadth')),int(variables('Length')))}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Length": {
+				"type": "string"
+			},
+			"Breadth": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"Length": {
+				"type": "String"
+			},
+			"Breadth": {
+				"type": "String"
+			},
+			"Area": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Data Movement Activities/Set Variable"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-15T07:18:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

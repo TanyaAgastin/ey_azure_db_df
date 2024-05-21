@@ -1,9 +1,9 @@
 {
-	"name": "CopyDataFromRawtoOutput",
+	"name": "_03_CopySpecificFiles",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data",
+				"name": "Copy data1",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -19,7 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
+							"fileListPath": "adf-container/user-profiles/Filenames.txt",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -39,14 +39,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_ADLS_adf_container_user_profiles_raw",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileNameDS": {
-								"value": "@pipeline().parameters.FileNameDP",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "DS_ADLS_adf_container_user_profiles_raw_specific",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -57,16 +51,11 @@
 				]
 			}
 		],
-		"parameters": {
-			"FileNameDP": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "Data Movement Activities/Copy Data"
 		},
 		"annotations": [],
-		"lastPublishTime": "2024-05-15T04:57:20Z"
+		"lastPublishTime": "2024-05-15T05:02:15Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

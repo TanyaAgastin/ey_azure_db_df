@@ -1,0 +1,36 @@
+{
+	"name": "Trigger Notebook",
+	"properties": {
+		"activities": [
+			{
+				"name": "Trigger Notebook",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/ey-training/Trigger Notebook",
+					"baseParameters": {
+						"input": "10"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Data Transaformation Activities/Databricks Integration"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-20T08:04:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

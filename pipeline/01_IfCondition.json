@@ -1,0 +1,77 @@
+{
+	"name": "01_IfCondition",
+	"properties": {
+		"activities": [
+			{
+				"name": "IF City Exists",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@contains(pipeline().parameters.ListofCities,pipeline().parameters.CityToSearch)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set IfExists False",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IfCityExists",
+								"value": "City does not Exist in List."
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set IfExists True",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IfCityExists",
+								"value": "City Exists in List."
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ListofCities": {
+				"type": "array",
+				"defaultValue": [
+					"New York",
+					"Tokyo",
+					"Chennai",
+					"Bengaluru"
+				]
+			},
+			"CityToSearch": {
+				"type": "string",
+				"defaultValue": "Mysore"
+			}
+		},
+		"variables": {
+			"IfCityExists": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Control Flow Activities/Conditional Activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-17T05:26:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

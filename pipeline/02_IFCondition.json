@@ -1,0 +1,105 @@
+{
+	"name": "02_IFCondition",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Table count",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select count(*) Count from dbo.inactive_users ",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_SQL_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "inactive_users ",
+							"Schema": "dbo"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get Table count",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Get Table count').output.value[0].Count,0)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "No Records",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "No Records",
+								"value": "No Records"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "No of Records",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Count",
+								"value": {
+									"value": "@activity('Get Table count').output.value[0].Count",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"Count": {
+				"type": "Integer"
+			},
+			"No Records": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Control Flow Activities/Conditional Activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-20T05:51:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

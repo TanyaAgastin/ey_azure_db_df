@@ -1,0 +1,85 @@
+{
+	"name": "Filter - 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Fetch records from sql table",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from user_info where country='India'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_sql_user_info",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Filter records with Female Users",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Fetch records from sql table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Fetch records from sql table').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().gender,'Female')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter  Female Users from Pondicherry",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Fetch records from sql table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Fetch records from sql table').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@and(equals(item().gender,'Female'),equals(item().region,'Pondicherry'))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Data Movement Activities/Filter"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-16T05:05:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

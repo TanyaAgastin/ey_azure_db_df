@@ -1,0 +1,64 @@
+{
+	"name": "Set Variable - 2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set Pie",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "P",
+					"value": "3.14"
+				}
+			},
+			{
+				"name": "Calculate Area of Circle",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Pie",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Area",
+					"value": {
+						"value": "@{mul(mul(float(variables('P')),float(pipeline().parameters.Radius)),float(pipeline().parameters.Radius))}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Radius": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"P": {
+				"type": "String"
+			},
+			"Area": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Data Movement Activities/Set Variable"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-15T07:36:44Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

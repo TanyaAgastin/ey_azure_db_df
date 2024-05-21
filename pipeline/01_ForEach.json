@@ -1,0 +1,81 @@
+{
+	"name": "01_ForEach",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachCity",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('Listofcities')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append City",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FinalListofCities",
+								"value": {
+									"value": "@Concat('City=',item())",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEachCity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Output",
+					"value": {
+						"value": "@variables('FinalListofCities')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Listofcities": {
+				"type": "Array",
+				"defaultValue": [
+					"New York",
+					"London",
+					"Chennai",
+					"Tokyo"
+				]
+			},
+			"FinalListofCities": {
+				"type": "Array"
+			},
+			"Output": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Control Flow Activities/For Each"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-17T07:52:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

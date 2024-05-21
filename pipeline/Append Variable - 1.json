@@ -1,0 +1,60 @@
+{
+	"name": "Append Variable - 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FileName",
+					"value": "d.csv"
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Append variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "output",
+					"value": {
+						"value": "@variables('FileName')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"FileName": {
+				"type": "Array",
+				"defaultValue": [
+					"a.csv",
+					"b.csv",
+					"c.csv"
+				]
+			},
+			"output": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Data Movement Activities/Append Variable"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-16T06:48:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

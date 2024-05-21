@@ -1,0 +1,93 @@
+{
+	"name": "Trigger Stored Procedure in For Loop",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup for inactive users",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select Id from dbo.inactive_users",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_SQL_Table",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "inactive_users",
+							"Schema": "dbo"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Inactive User",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup for inactive users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup for inactive users').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Trigger Stored procedure  to delete the inactive user",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[SP_Delete_Inactive_User]",
+								"storedProcedureParameters": {
+									"userid": {
+										"value": {
+											"value": "@item().id",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "LS_ASQL_ey_sql_db",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Data Transaformation Activities/Stored Procedure"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-20T05:51:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

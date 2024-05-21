@@ -1,5 +1,5 @@
 {
-	"name": "CopyDataFromRawtoOutput",
+	"name": "Delete - 1",
 	"properties": {
 		"activities": [
 			{
@@ -43,7 +43,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FileNameDS": {
-								"value": "@pipeline().parameters.FileNameDP",
+								"value": "@pipeline().parameters.FileName",
 								"type": "Expression"
 							}
 						}
@@ -55,18 +55,56 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Delete1",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_ADLS_adf_container_user_profiles_raw",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileNameDS": {
+								"value": "@pipeline().parameters.FileName",
+								"type": "Expression"
+							}
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
 			}
 		],
 		"parameters": {
-			"FileNameDP": {
+			"FileName": {
 				"type": "string"
 			}
 		},
 		"folder": {
-			"name": "Data Movement Activities/Copy Data"
+			"name": "Data Movement Activities/Delete"
 		},
 		"annotations": [],
-		"lastPublishTime": "2024-05-15T04:57:20Z"
+		"lastPublishTime": "2024-05-15T07:51:16Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

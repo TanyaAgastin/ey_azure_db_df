@@ -1,0 +1,107 @@
+{
+	"name": "Employee dept dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LS_ASQL_ey_sql_db",
+						"type": "LinkedServiceReference"
+					},
+					"name": "employeedata"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LS_ASQL_ey_sql_db",
+						"type": "LinkedServiceReference"
+					},
+					"name": "departmentdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_output",
+						"type": "DatasetReference"
+					},
+					"name": "SaveToADLS"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectRequiredColumns"
+				},
+				{
+					"name": "EmployeeJoinDepartment"
+				},
+				{
+					"name": "aggregateSalary"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmployeeID as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Email as string,",
+				"          PhoneNumber as string,",
+				"          HireDate as date,",
+				"          DepartmentID as integer,",
+				"          Salary as decimal(10,2),",
+				"          MANAGERID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'Employees',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> employeedata",
+				"source(output(",
+				"          DepartmentID as integer,",
+				"          DepartmentName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'Departments',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> departmentdata",
+				"EmployeeJoinDepartment select(mapColumn(",
+				"          EmployeeID,",
+				"          FirstName,",
+				"          LastName,",
+				"          HireDate,",
+				"          DepartmentID = employeedata@DepartmentID,",
+				"          Salary,",
+				"          DepartmentName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectRequiredColumns",
+				"employeedata, departmentdata join(employeedata@DepartmentID == departmentdata@DepartmentID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> EmployeeJoinDepartment",
+				"selectRequiredColumns aggregate(groupBy(DepartmentName),",
+				"     Salary = sum(Salary)) ~> aggregateSalary",
+				"aggregateSalary sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Output'],",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          DepartmentName,",
+				"          Salary",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> SaveToADLS"
+			]
+		}
+	}
+}
