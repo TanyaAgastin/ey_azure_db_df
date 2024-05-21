@@ -1,0 +1,20 @@
+{
+	"name": "SQL script 2",
+	"properties": {
+		"folder": {
+			"name": "nyctaxidata_sql"
+		},
+		"content": {
+			"query": "-- SELECT top 100 * from\n-- OPENROWSET(\n--     BULK 'https://eystgacc20240507.dfs.core.windows.net/synapse-analytics-container/NYCGreenTaxiTripData/raw/taxi_zone.csv',\n--     FORMAT='csv',\n--     PARSER_VERSION='2.0',\n--     HEADER_ROW=TRUE,\n--     FIELDTERMINATOR=','\n\n-- ) WITH(\n-- LocationID SMALLINT\n-- ,Borough NVARCHAR(50)\n-- ,Zone NVARCHAR(50)\n-- ,service_zone NVARCHAR(50)\n\n-- )\n\n-- as [Results]\n\n--ALTER DATABASE nyctaxitripdata COLLATE Latin1_General_100_CI_AI_SC_UTF8;\n\nSELECT\nTOP 100 *\nFROM\nOPENROWSET(\n    BULK 'https://eystgacc20240507.dfs.core.windows.net/synapse-analytics-container/NYCGreenTaxiTripData/raw/taxi_zone.csv',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE,\n    FIELDTERMINATOR = ','\n) WITH (\n    LocationID SMALLINT,\n    Borough VARCHAR(50),\n    Zone VARCHAR(50),\n    service_zone VARCHAR(50)\n)\nAS [result]\n\n-- SELECT name, collation_name from sys.databases;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

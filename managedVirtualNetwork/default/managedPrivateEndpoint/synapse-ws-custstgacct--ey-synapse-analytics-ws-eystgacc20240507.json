@@ -1,0 +1,7 @@
+{
+	"name": "synapse-ws-custstgacct--ey-synapse-analytics-ws-eystgacc20240507",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/bf693135-b153-4c3f-83ba-65595415dd70/resourceGroups/ey_rg/providers/Microsoft.Storage/storageAccounts/eystgacc20240507",
+		"groupId": "dfs"
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"name": "synapse-ws-sql--ey-synapse-analytics-ws",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/bf693135-b153-4c3f-83ba-65595415dd70/resourceGroups/ey_rg/providers/Microsoft.Synapse/workspaces/ey-synapse-analytics-ws",
+		"groupId": "sql",
+		"fqdns": [
+			"ey-synapse-analytics-ws.6c8e5dfd-e67e-4a0c-8b7e-c3063a655b22.sql.azuresynapse.net"
+		]
+	}
+}

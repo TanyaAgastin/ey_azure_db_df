@@ -1,0 +1,20 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"folder": {
+			"name": "nyctaxidata_sql"
+		},
+		"content": {
+			"query": "SELECT top 100 * from\nOPENROWSET(\n    BULK 'https://eystgacc20240507.dfs.core.windows.net/synapse-analytics-container/NYCGreenTaxiTripData/raw/taxi_zone.csv',\n    FORMAT='csv',\n    PARSER_VERSION='2.0',\n    HEADER_ROW=TRUE,\n    FIELDTERMINATOR=','\n\n) as [Results]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyctaxitripdata",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
